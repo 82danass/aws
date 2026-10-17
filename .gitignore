@@ -1,0 +1,2 @@
+# The workspace file carries the AWS account id: it stays out of the public repo.
+mov-workspace/mov.workspace.json
