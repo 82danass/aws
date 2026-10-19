@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="866" height="709" viewBox="0 0 866 709" font-family="MesloLGS NF, monospace, 'Cascadia Mono', Consolas, 'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="10" fill="#cad3f5">
+<defs><clipPath id="win"><rect width="866" height="709" rx="8" ry="8"/></clipPath></defs><g clip-path="url(#win)">
+<rect y="32" width="866" height="677" fill="#24273a"/>
+
+<text y="58" xml:space="preserve"><tspan x="16" textLength="18" lengthAdjust="spacing" fill="#e1c682">mov</tspan><tspan x="34" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="40" textLength="18" lengthAdjust="spacing" fill="#a5adcb">ssh</tspan><tspan x="58" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="64" textLength="18" lengthAdjust="spacing" fill="#a5adcb">v42</tspan></text>
+<text y="73" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing" fill="#8bd5ca">mov-workspace</tspan><tspan x="94" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="100" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="106" textLength="156" lengthAdjust="spacing"> aws account ████████████ </tspan><tspan x="262" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="268" textLength="108" lengthAdjust="spacing"> region eu-north-1</tspan></text>
+<text y="88" xml:space="preserve"><tspan x="16" textLength="396" lengthAdjust="spacing" opacity="0.5">ssh -F &quot;D:/MOV25/GitHub/aws/mov-workspace/keys/ssh_config&quot; v42-web</tspan></text>
+<text y="103" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">   ,     #_</tspan></text>
+<text y="118" xml:space="preserve"><tspan x="16" textLength="228" lengthAdjust="spacing">   ~\_  ####_        Amazon Linux 2023</tspan></text>
+<text y="133" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~  \_#####\</tspan></text>
+<text y="148" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~     \###|</tspan></text>
+<text y="163" xml:space="preserve"><tspan x="16" textLength="402" lengthAdjust="spacing">  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023</tspan></text>
+<text y="178" xml:space="preserve"><tspan x="16" textLength="114" lengthAdjust="spacing">   ~~       V~' '-&gt;</tspan></text>
+<text y="193" xml:space="preserve"><tspan x="16" textLength="102" lengthAdjust="spacing">    ~~~         /</tspan></text>
+<text y="208" xml:space="preserve"><tspan x="16" textLength="96" lengthAdjust="spacing">      ~~._.   _/</tspan></text>
+<text y="223" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">         _/ _/</tspan></text>
+<text y="238" xml:space="preserve"><tspan x="16" textLength="72" lengthAdjust="spacing">       _/m/'</tspan></text>
+<text y="253" xml:space="preserve"><tspan x="16" textLength="378" lengthAdjust="spacing">[awsuser@ip-10-20-1-170 ~]$ sudo systemctl status nginx.service</tspan></text>
+<text y="268" xml:space="preserve"><tspan x="16" textLength="6" lengthAdjust="spacing" fill="#a6da95" font-weight="bold">●</tspan><tspan x="22" textLength="336" lengthAdjust="spacing"> nginx.service - The nginx HTTP and reverse proxy server</tspan></text>
+<text y="283" xml:space="preserve"><tspan x="16" textLength="126" lengthAdjust="spacing">     Loaded: loaded (</tspan><tspan x="142" textLength="222" lengthAdjust="spacing" text-decoration="underline">/usr/lib/systemd/system/nginx.service</tspan><tspan x="364" textLength="12" lengthAdjust="spacing">; </tspan><tspan x="376" textLength="42" lengthAdjust="spacing" fill="#a6da95" font-weight="bold">enabled</tspan><tspan x="418" textLength="60" lengthAdjust="spacing">; preset: </tspan><tspan x="478" textLength="48" lengthAdjust="spacing" fill="#d7d75f" font-weight="bold">disabled</tspan><tspan x="526" textLength="6" lengthAdjust="spacing">)</tspan></text>
+<text y="298" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing">     Active: </tspan><tspan x="94" textLength="96" lengthAdjust="spacing" fill="#a6da95" font-weight="bold">active (running)</tspan><tspan x="190" textLength="288" lengthAdjust="spacing"> since Sun 2026-10-18 20:30:34 UTC; 3min 49s ago</tspan></text>
+<text y="313" xml:space="preserve"><tspan x="16" textLength="552" lengthAdjust="spacing">    Process: 9405 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)</tspan></text>
+<text y="328" xml:space="preserve"><tspan x="16" textLength="486" lengthAdjust="spacing">    Process: 9487 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)</tspan></text>
+<text y="343" xml:space="preserve"><tspan x="16" textLength="450" lengthAdjust="spacing">    Process: 9538 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)</tspan></text>
+<text y="358" xml:space="preserve"><tspan x="16" textLength="516" lengthAdjust="spacing">    Process: 9600 ExecReload=/usr/sbin/nginx -s reload (code=exited, status=0/SUCCESS)</tspan></text>
+<text y="373" xml:space="preserve"><tspan x="16" textLength="150" lengthAdjust="spacing">   Main PID: 9581 (nginx)</tspan></text>
+<text y="388" xml:space="preserve"><tspan x="16" textLength="168" lengthAdjust="spacing">      Tasks: 3 (limit: 1059)</tspan></text>
+<text y="403" xml:space="preserve"><tspan x="16" textLength="102" lengthAdjust="spacing">     Memory: 4.0M</tspan></text>
+<text y="418" xml:space="preserve"><tspan x="16" textLength="108" lengthAdjust="spacing">        CPU: 137ms</tspan></text>
+<text y="433" xml:space="preserve"><tspan x="16" textLength="240" lengthAdjust="spacing">     CGroup: /system.slice/nginx.service</tspan></text>
+<text y="448" xml:space="preserve"><tspan x="16" textLength="90" lengthAdjust="spacing">             ├─</tspan><tspan x="106" textLength="264" lengthAdjust="spacing" fill="#8a8a8a">9581 &quot;nginx: master process /usr/sbin/nginx&quot;</tspan></text>
+<text y="463" xml:space="preserve"><tspan x="16" textLength="90" lengthAdjust="spacing">             ├─</tspan><tspan x="106" textLength="168" lengthAdjust="spacing" fill="#8a8a8a">9676 &quot;nginx: worker process&quot;</tspan></text>
+<text y="478" xml:space="preserve"><tspan x="16" textLength="90" lengthAdjust="spacing">             └─</tspan><tspan x="106" textLength="168" lengthAdjust="spacing" fill="#8a8a8a">9678 &quot;nginx: worker process&quot;</tspan></text>
+<text y="508" xml:space="preserve"><tspan x="16" textLength="798" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9487]: nginx: [warn] conflicting server name &quot;_&quot; on [::]:80, ignored</tspan></text>
+<text y="523" xml:space="preserve"><tspan x="16" textLength="816" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9487]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</tspan></text>
+<text y="538" xml:space="preserve"><tspan x="16" textLength="828" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9487]: nginx: configuration file /etc/nginx/nginx.conf test is successful</tspan></text>
+<text y="553" xml:space="preserve"><tspan x="16" textLength="816" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9538]: nginx: [warn] conflicting server name &quot;_&quot; on 0.0.0.0:80, ignored</tspan></text>
+<text y="568" xml:space="preserve"><tspan x="16" textLength="798" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9538]: nginx: [warn] conflicting server name &quot;_&quot; on [::]:80, ignored</tspan></text>
+<text y="583" xml:space="preserve"><tspan x="16" textLength="810" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal systemd[1]: Started nginx.service - The nginx HTTP and reverse proxy server.</tspan></text>
+<text y="598" xml:space="preserve"><tspan x="16" textLength="834" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal systemd[1]: Reloading nginx.service - The nginx HTTP and reverse proxy server...</tspan></text>
+<text y="613" xml:space="preserve"><tspan x="16" textLength="816" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9600]: nginx: [warn] conflicting server name &quot;_&quot; on 0.0.0.0:80, ignored</tspan></text>
+<text y="628" xml:space="preserve"><tspan x="16" textLength="798" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal nginx[9600]: nginx: [warn] conflicting server name &quot;_&quot; on [::]:80, ignored</tspan></text>
+<text y="643" xml:space="preserve"><tspan x="16" textLength="816" lengthAdjust="spacing">Oct 18 20:30:34 ip-10-20-1-170.eu-north-1.compute.internal systemd[1]: Reloaded nginx.service - The nginx HTTP and reverse proxy server.</tspan></text>
+<text y="658" xml:space="preserve"><tspan x="16" textLength="192" lengthAdjust="spacing">[awsuser@ip-10-20-1-170 ~]$ exit</tspan></text>
+<text y="673" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing">logout</tspan></text>
+<text y="688" xml:space="preserve"><tspan x="16" textLength="216" lengthAdjust="spacing">Connection to 16.171.235.114 closed.</tspan></text>
+<path d="M0 8 A 8 8 0 0 1 8 0 L 858 0 A 8 8 0 0 1 866 8 L 866 32 L 0 32 Z" fill="#181926"/><text x="16" y="16" fill="#cad3f5" font-size="12" opacity="0.75" text-anchor="start" dominant-baseline="central">PowerShell Extension</text><line x1="746" y1="16" x2="756" y2="16" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><rect x="792" y="11" width="10" height="10" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><path d="M838 11 L848 21 M848 11 L838 21" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/>
+</g>
+</svg>

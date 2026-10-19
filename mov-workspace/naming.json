@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Arelius-D/mov/main/src/mov/data/schema/naming.schema.json",
+  "tokens": {
+    "company": "novatrix",
+    "user": "sysop"
+  },
+  "patterns": {
+    "iamGroup": "grp-{company}-{purpose}",
+    "iamUser": "usr-{company}-{purpose}",
+    "cfnStack": "stk-{company}-{env}",
+    "ec2Vpc": "vpc-{company}-{env}",
+    "ec2InternetGateway": "igw-{company}-{env}",
+    "ec2RouteTable": "rt-{company}-{env}",
+    "ec2Subnet": "snet-{company}-{env}-{purpose}",
+    "ec2SecurityGroup": "sgr-{company}-{env}-{purpose}",
+    "ec2Instance": "ec2-{company}-{env}-{purpose}",
+    "budget": "budget-{company}-{env}",
+    "resource": "{purpose}-{company}-{env}"
+  },
+  "rules": {
+    "default": {
+      "pattern": "^[a-z][a-z0-9-]{1,62}[a-z0-9]$",
+      "description": "type-company-purpose: lower case letters, digits and hyphens, starting with a letter."
+    }
+  }
+}

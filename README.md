@@ -8,11 +8,11 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 
 ### [v42 — Compute och kom igång](v42/README.md)
 - [x] Sätt upp kursrepo på GitHub (README med namn, kurs, veckorubrik)
-- [ ] Provisionera en EC2-instans med Amazon Linux, key pair och security group
-- [ ] Konfigurera värdmiljön: anslut via SSH och installera en webbserver
-- [ ] Driftsätt webbsidan om Novatrix på instansens publika IP
-- [ ] Verifiera och dokumentera
-- [ ] Kostnadskontroll: månadsbudget i AWS Budgets med larm på faktisk och prognostiserad kostnad
+- [x] Provisionera en EC2-instans med Amazon Linux, key pair och security group
+- [x] Konfigurera värdmiljön: anslut via SSH och installera en webbserver
+- [x] Driftsätt webbsidan om Novatrix på instansens publika IP
+- [x] Verifiera och dokumentera
+- [x] Kostnadskontroll: månadsbudget i AWS Budgets med larm på faktisk och prognostiserad kostnad
 
 ### [v43 — IAM och identitet](v43/README.md)
 - [ ] Skapa avsnitt för v43 och uppdatera README

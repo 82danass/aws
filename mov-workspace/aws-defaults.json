@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Arelius-D/mov/main/src/mov/data/schema/aws-defaults.schema.json",
+  "tags": {
+    "env": "${env}",
+    "managedBy": "mov"
+  },
+  "stages": [
+    "preflight",
+    "stack"
+  ],
+  "admin": {
+    "sshSource": "@caller"
+  },
+  "itemDefaults": {
+    "network.securityGroups.*": {
+      "protocol": "tcp"
+    },
+    "compute.vms": {
+      "image": "Ubuntu2404",
+      "size": "t3.micro",
+      "adminUsername": "awsuser",
+      "publicIp": true,
+      "app": false,
+      "rootVolume": {
+        "type": "gp3",
+        "sizeGb": 8
+      },
+      "ssh": {
+        "mode": "generate",
+        "keyName": "mov-${env}",
+        "keyType": "ed25519"
+      },
+      "host": {
+        "packages": [
+          "git"
+        ],
+        "updatePackages": true,
+        "upgradePackages": true,
+        "rebootIfRequired": true
+      }
+    }
+  }
+}

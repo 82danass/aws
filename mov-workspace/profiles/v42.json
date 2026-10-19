@@ -1,0 +1,57 @@
+{
+  "env": "v42",
+  "description": "Novatrix webbsida på EC2 med Amazon Linux, månadsbudget och verifiering",
+  "stages": ["preflight", "cost", "stack", "verify"],
+  "cost": {
+    "amount": 20,
+    "currency": "USD",
+    "timeGrain": "Monthly",
+    "thresholds": [
+      { "percent": 50, "type": "Actual", "operator": "GreaterThan" },
+      { "percent": 80, "type": "Actual", "operator": "GreaterThan" },
+      { "percent": 90, "type": "Actual", "operator": "GreaterThan" },
+      { "percent": 100, "type": "Forecasted", "operator": "GreaterThan" }
+    ],
+    "notify": { "emails": ["82danass@gafe.molndal.se", "assarelius@icloud.com"] }
+  },
+  "network": {
+    "addressSpace": "10.20.0.0/16",
+    "subnets": [{ "purpose": "web", "prefix": "10.20.1.0/24" }],
+    "securityGroups": {
+      "web": [
+        { "name": "ssh", "ports": ["22"], "source": "${admin.sshSource}" },
+        { "name": "http", "ports": ["80"], "source": "*" }
+      ]
+    }
+  },
+  "compute": {
+    "vms": [
+      {
+        "purpose": "web",
+        "image": "AmazonLinux2023",
+        "subnet": "web",
+        "securityGroup": "web",
+        "app": true,
+        "source": {
+          "repo": "82danass/aws",
+          "ref": "master",
+          "path": "v42/public",
+          "bootstrap": "scripts/bootstrap.sh",
+          "auth": "public"
+        }
+      }
+    ]
+  },
+  "verify": {
+    "httpPath": "/",
+    "expectStatus": 200,
+    "expectText": "Novatrix",
+    "timeoutSeconds": 600,
+    "intervalSeconds": 10,
+    "host": [
+      { "name": "cloud-init", "run": "cloud-init status --wait >/dev/null; cloud-init status | head -n 1", "expect": "status: done" },
+      { "name": "nginx", "run": "systemctl is-active nginx", "expect": "active" },
+      { "name": "bootstrap", "run": "test -f /etc/mov/deployed.json && echo present", "expect": "present" }
+    ]
+  }
+}

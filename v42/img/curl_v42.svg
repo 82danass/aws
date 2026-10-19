@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="746" height="544" viewBox="0 0 746 544" font-family="MesloLGS NF, monospace, 'Cascadia Mono', Consolas, 'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="10" fill="#cad3f5">
+<defs><clipPath id="win"><rect width="746" height="544" rx="8" ry="8"/></clipPath></defs><g clip-path="url(#win)">
+<rect y="32" width="746" height="512" fill="#24273a"/>
+
+<text y="58" xml:space="preserve"><tspan x="16" textLength="24" lengthAdjust="spacing" fill="#e1c682">curl</tspan><tspan x="40" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="46" textLength="12" lengthAdjust="spacing" fill="#5b6078">-i</tspan><tspan x="58" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="64" textLength="84" lengthAdjust="spacing" fill="#a5adcb">16.171.235.114</tspan></text>
+<text y="73" xml:space="preserve"><tspan x="16" textLength="90" lengthAdjust="spacing">HTTP/1.1 200 OK</tspan></text>
+<text y="88" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing" font-weight="bold">Server</tspan><tspan x="52" textLength="84" lengthAdjust="spacing">: nginx/1.30.5</tspan></text>
+<text y="103" xml:space="preserve"><tspan x="16" textLength="24" lengthAdjust="spacing" font-weight="bold">Date</tspan><tspan x="40" textLength="186" lengthAdjust="spacing">: Sun, 18 Oct 2026 20:32:43 GMT</tspan></text>
+<text y="118" xml:space="preserve"><tspan x="16" textLength="72" lengthAdjust="spacing" font-weight="bold">Content-Type</tspan><tspan x="88" textLength="66" lengthAdjust="spacing">: text/html</tspan></text>
+<text y="133" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing" font-weight="bold">Content-Length</tspan><tspan x="100" textLength="30" lengthAdjust="spacing">: 768</tspan></text>
+<text y="148" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing" font-weight="bold">Last-Modified</tspan><tspan x="94" textLength="186" lengthAdjust="spacing">: Sun, 18 Oct 2026 20:30:30 GMT</tspan></text>
+<text y="163" xml:space="preserve"><tspan x="16" textLength="60" lengthAdjust="spacing" font-weight="bold">Connection</tspan><tspan x="76" textLength="72" lengthAdjust="spacing">: keep-alive</tspan></text>
+<text y="178" xml:space="preserve"><tspan x="16" textLength="24" lengthAdjust="spacing" font-weight="bold">ETag</tspan><tspan x="40" textLength="96" lengthAdjust="spacing">: &quot;6ad52c66-300&quot;</tspan></text>
+<text y="193" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing" font-weight="bold">Accept-Ranges</tspan><tspan x="94" textLength="42" lengthAdjust="spacing">: bytes</tspan></text>
+<text y="223" xml:space="preserve"><tspan x="16" textLength="90" lengthAdjust="spacing">&lt;!DOCTYPE html&gt;</tspan></text>
+<text y="238" xml:space="preserve"><tspan x="16" textLength="96" lengthAdjust="spacing">&lt;html lang=&quot;sv&quot;&gt;</tspan></text>
+<text y="253" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing">&lt;head&gt;</tspan></text>
+<text y="268" xml:space="preserve"><tspan x="16" textLength="156" lengthAdjust="spacing">    &lt;meta charset=&quot;UTF-8&quot;&gt;</tspan></text>
+<text y="283" xml:space="preserve"><tspan x="16" textLength="444" lengthAdjust="spacing">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</tspan></text>
+<text y="298" xml:space="preserve"><tspan x="16" textLength="180" lengthAdjust="spacing">    &lt;title&gt;Novatrix AB&lt;/title&gt;</tspan></text>
+<text y="313" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">    &lt;style&gt;</tspan></text>
+<text y="328" xml:space="preserve"><tspan x="16" textLength="600" lengthAdjust="spacing">        body { margin: 0; font-family: system-ui, sans-serif; background: #f4f6f8; color: #1d2733; }</tspan></text>
+<text y="343" xml:space="preserve"><tspan x="16" textLength="420" lengthAdjust="spacing">        main { max-width: 40rem; margin: 4rem auto; padding: 0 1rem; }</tspan></text>
+<text y="358" xml:space="preserve"><tspan x="16" textLength="336" lengthAdjust="spacing">        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }</tspan></text>
+<text y="373" xml:space="preserve"><tspan x="16" textLength="300" lengthAdjust="spacing">        p { font-size: 1.1rem; line-height: 1.6; }</tspan></text>
+<text y="388" xml:space="preserve"><tspan x="16" textLength="72" lengthAdjust="spacing">    &lt;/style&gt;</tspan></text>
+<text y="403" xml:space="preserve"><tspan x="16" textLength="42" lengthAdjust="spacing">&lt;/head&gt;</tspan></text>
+<text y="418" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing">&lt;body&gt;</tspan></text>
+<text y="433" xml:space="preserve"><tspan x="16" textLength="60" lengthAdjust="spacing">    &lt;main&gt;</tspan></text>
+<text y="448" xml:space="preserve"><tspan x="16" textLength="168" lengthAdjust="spacing">        &lt;h1&gt;Novatrix AB&lt;/h1&gt;</tspan></text>
+<text y="463" xml:space="preserve"><tspan x="16" textLength="714" lengthAdjust="spacing">        &lt;p&gt;Novatrix hjälper företag med kundsupport. Ärenden tas emot, följs upp och löses på ett och samma ställe.&lt;/p&gt;</tspan></text>
+<text y="478" xml:space="preserve"><tspan x="16" textLength="462" lengthAdjust="spacing">        &lt;p&gt;Webbplatsen körs nu i AWS, på en EC2-instans med Amazon Linux.&lt;/p&gt;</tspan></text>
+<text y="493" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">    &lt;/main&gt;</tspan></text>
+<text y="508" xml:space="preserve"><tspan x="16" textLength="42" lengthAdjust="spacing">&lt;/body&gt;</tspan></text>
+<text y="523" xml:space="preserve"><tspan x="16" textLength="42" lengthAdjust="spacing">&lt;/html&gt;</tspan></text>
+<path d="M0 8 A 8 8 0 0 1 8 0 L 738 0 A 8 8 0 0 1 746 8 L 746 32 L 0 32 Z" fill="#181926"/><text x="16" y="16" fill="#cad3f5" font-size="12" opacity="0.75" text-anchor="start" dominant-baseline="central">PowerShell Extension</text><line x1="626" y1="16" x2="636" y2="16" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><rect x="672" y="11" width="10" height="10" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><path d="M718 11 L728 21 M728 11 L718 21" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/>
+</g>
+</svg>
