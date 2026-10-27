@@ -1,0 +1,153 @@
+{
+  "env": "v43",
+  "extends": "v42",
+  "description": "IAM för Novatrix: människorna i arbetsytans directory.json, grupperna drift, utveckling och granskning med var sin policy enligt least privilege och en användare per person. En kedja av tjänster där varje led har en egen roll som når nästa led och inget annat: webbservern lägger jobb på en SQS-kö, en Lambda-funktion tar dem och skriver resultatet i en S3-bucket, webbservern läser resultatet.",
+  "stages": ["preflight", "cost", "directory", "stack", "verify"],
+  "network": {
+    "addressSpace": "10.43.0.0/16",
+    "subnets": [{ "purpose": "web", "prefix": "10.43.1.0/24" }]
+  },
+  "identity": {
+    "userAssigned": [
+      { "purpose": "web", "description": "Webbservern: lägger jobb på kön och läser resultaten ur bucketen, inget annat." },
+      { "purpose": "worker", "description": "Jobbfunktionen: tar jobb från kön, skriver resultatet i bucketen och loggar, inget annat." }
+    ]
+  },
+  "compute": {
+    "vms": [
+      {
+        "purpose": "web",
+        "image": "AmazonLinux2023",
+        "subnet": "web",
+        "securityGroup": "web",
+        "app": true,
+        "identities": ["web"],
+        "environment": {
+          "DOCS_BUCKET": "@resourceId:docs",
+          "JOBS_URL": "@resourceId:jobs"
+        },
+        "source": {
+          "repo": "82danass/aws",
+          "ref": "master",
+          "path": "v42/public",
+          "bootstrap": "scripts/bootstrap.sh",
+          "auth": "public"
+        }
+      }
+    ]
+  },
+  "resources": [
+    {
+      "type": "AWS::S3::Bucket",
+      "purpose": "docs",
+      "properties": {
+        "PublicAccessBlockConfiguration": { "BlockPublicAcls": true, "BlockPublicPolicy": true, "IgnorePublicAcls": true, "RestrictPublicBuckets": true },
+        "OwnershipControls": { "Rules": [{ "ObjectOwnership": "BucketOwnerEnforced" }] },
+        "BucketEncryption": { "ServerSideEncryptionConfiguration": [{ "ServerSideEncryptionByDefault": { "SSEAlgorithm": "AES256" } }] },
+        "LifecycleConfiguration": { "Rules": [{ "Id": "results", "Status": "Enabled", "Prefix": "results/", "ExpirationInDays": 7 }] }
+      }
+    },
+    {
+      "type": "AWS::SQS::Queue",
+      "purpose": "jobs",
+      "properties": { "SqsManagedSseEnabled": true, "MessageRetentionPeriod": 3600, "VisibilityTimeout": 60 }
+    },
+    {
+      "type": "AWS::Logs::LogGroup",
+      "purpose": "handlerlogs",
+      "properties": { "RetentionInDays": 1 }
+    },
+    {
+      "type": "AWS::Lambda::Function",
+      "purpose": "handler",
+      "properties": {
+        "Description": "Tar ett jobb från kön och skriver resultatet i bucketen under results/.",
+        "Runtime": "python3.12",
+        "Handler": "index.handler",
+        "Timeout": 10,
+        "MemorySize": 128,
+        "Role": "@attribute:worker.Arn",
+        "LoggingConfig": { "LogGroup": "@resourceId:handlerlogs" },
+        "Environment": { "Variables": { "DOCS_BUCKET": "@resourceId:docs" } },
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": ["\n", [
+              "import os",
+              "import re",
+              "import boto3",
+              "",
+              "s3 = boto3.client('s3')",
+              "JOB = re.compile(r'^[a-z0-9-]{1,64}$')",
+              "",
+              "",
+              "def handler(event, context):",
+              "    for record in event['Records']:",
+              "        job = record['body'].strip()",
+              "        if not JOB.match(job):",
+              "            print(f'skipped {record[\"messageId\"]}: not a job name')",
+              "            continue",
+              "        key = f'results/{job}.txt'",
+              "        s3.put_object(Bucket=os.environ['DOCS_BUCKET'], Key=key, Body=f'{job}: klart\\n'.encode())",
+              "        print(f'wrote {key}')",
+              ""
+            ]]
+          }
+        }
+      }
+    },
+    {
+      "type": "AWS::IAM::ManagedPolicy",
+      "purpose": "workeraccess",
+      "name": "pol-novatrix-${env}-worker",
+      "properties": {
+        "ManagedPolicyName": "pol-novatrix-${env}-worker",
+        "Description": "Jobbfunktionens behörigheter: ta och ta bort jobb från kön, skriva resultat under results/, logga till sin egen loggrupp.",
+        "Roles": ["@resourceId:worker"],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            { "Sid": "TakeJobs", "Effect": "Allow", "Action": ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"], "Resource": "@attribute:jobs.Arn" },
+            { "Sid": "WriteResults", "Effect": "Allow", "Action": "s3:PutObject", "Resource": { "Fn::Sub": "${Docs.Arn}/results/*" } },
+            { "Sid": "Log", "Effect": "Allow", "Action": ["logs:CreateLogStream", "logs:PutLogEvents"], "Resource": "@attribute:handlerlogs.Arn" }
+          ]
+        }
+      }
+    },
+    {
+      "type": "AWS::Lambda::EventSourceMapping",
+      "purpose": "trigger",
+      "dependsOn": ["workeraccess"],
+      "properties": { "EventSourceArn": "@attribute:jobs.Arn", "FunctionName": "@resourceId:handler", "BatchSize": 1 }
+    },
+    {
+      "type": "AWS::IAM::ManagedPolicy",
+      "purpose": "webaccess",
+      "name": "pol-novatrix-${env}-web",
+      "properties": {
+        "ManagedPolicyName": "pol-novatrix-${env}-web",
+        "Description": "Webbserverns behörigheter: lägga jobb på kön och läsa resultaten under results/.",
+        "Roles": ["@resourceId:web"],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            { "Sid": "SendJobs", "Effect": "Allow", "Action": "sqs:SendMessage", "Resource": "@attribute:jobs.Arn" },
+            { "Sid": "ReadResults", "Effect": "Allow", "Action": "s3:GetObject", "Resource": { "Fn::Sub": "${Docs.Arn}/results/*" } }
+          ]
+        }
+      }
+    }
+  ],
+  "verify": {
+    "host": [
+      { "name": "cloud-init", "run": "cloud-init status --wait >/dev/null; cloud-init status | head -n 1", "expect": "status: done" },
+      { "name": "nginx", "run": "systemctl is-active nginx", "expect": "active" },
+      { "name": "bootstrap", "run": "test -f /etc/mov/deployed.json && echo present", "expect": "present" },
+      { "name": "role", "run": "aws sts get-caller-identity --query Arn --output text | cut -d/ -f2", "expect": "rol-novatrix-${env}-web" },
+      { "name": "send-job", "run": ". /etc/mov/deploy.env && aws sqs send-message --queue-url \"$JOBS_URL\" --message-body ${env}-prov --query MessageId --output text >/dev/null && echo sent", "expect": "sent" },
+      { "name": "read-result", "run": ". /etc/mov/deploy.env && aws s3 cp \"s3://$DOCS_BUCKET/results/${env}-prov.txt\" -", "expect": "${env}-prov: klart" },
+      { "name": "deny-delete", "run": ". /etc/mov/deploy.env && aws s3 rm \"s3://$DOCS_BUCKET/results/${env}-prov.txt\" 2>&1 | grep -c AccessDenied", "expect": "1" },
+      { "name": "deny-write", "run": ". /etc/mov/deploy.env && echo x | aws s3 cp - \"s3://$DOCS_BUCKET/results/annat.txt\" 2>&1 | grep -c AccessDenied", "expect": "1" },
+      { "name": "deny-take-job", "run": ". /etc/mov/deploy.env && aws sqs receive-message --queue-url \"$JOBS_URL\" 2>&1 | grep -c AccessDenied", "expect": "1" }
+    ]
+  }
+}

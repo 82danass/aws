@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1184" height="739" viewBox="0 0 1184 739" font-family="MesloLGS NF, monospace, 'Cascadia Mono', Consolas, 'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="10" fill="#cad3f5">
+<defs><clipPath id="win"><rect width="1184" height="739" rx="8" ry="8"/></clipPath></defs><g clip-path="url(#win)">
+<rect y="32" width="1184" height="707" fill="#24273a"/>
+
+<text y="58" xml:space="preserve"><tspan x="16" textLength="18" lengthAdjust="spacing" fill="#e1c682">mov</tspan><tspan x="34" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="40" textLength="18" lengthAdjust="spacing" fill="#a5adcb">ssh</tspan><tspan x="58" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="64" textLength="42" lengthAdjust="spacing" fill="#a5adcb">v43-web</tspan></text>
+<text y="73" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing" fill="#8bd5ca">mov-workspace</tspan><tspan x="94" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="100" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="106" textLength="156" lengthAdjust="spacing"> aws account ████████████ </tspan><tspan x="262" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="268" textLength="108" lengthAdjust="spacing"> region eu-north-1</tspan></text>
+<text y="88" xml:space="preserve"><tspan x="16" textLength="396" lengthAdjust="spacing" opacity="0.5">ssh -F &quot;D:/MOV25/GitHub/aws/mov-workspace/keys/ssh_config&quot; v43-web</tspan></text>
+<text y="103" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">   ,     #_</tspan></text>
+<text y="118" xml:space="preserve"><tspan x="16" textLength="228" lengthAdjust="spacing">   ~\_  ####_        Amazon Linux 2023</tspan></text>
+<text y="133" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~  \_#####\</tspan></text>
+<text y="148" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~     \###|</tspan></text>
+<text y="163" xml:space="preserve"><tspan x="16" textLength="402" lengthAdjust="spacing">  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023</tspan></text>
+<text y="178" xml:space="preserve"><tspan x="16" textLength="114" lengthAdjust="spacing">   ~~       V~' '-&gt;</tspan></text>
+<text y="193" xml:space="preserve"><tspan x="16" textLength="102" lengthAdjust="spacing">    ~~~         /</tspan></text>
+<text y="208" xml:space="preserve"><tspan x="16" textLength="96" lengthAdjust="spacing">      ~~._.   _/</tspan></text>
+<text y="223" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">         _/ _/</tspan></text>
+<text y="238" xml:space="preserve"><tspan x="16" textLength="72" lengthAdjust="spacing">       _/m/'</tspan></text>
+<text y="253" xml:space="preserve"><tspan x="16" textLength="306" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ cat /etc/mov/deploy.env</tspan></text>
+<text y="268" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">MOV_ENV=v43</tspan></text>
+<text y="283" xml:space="preserve"><tspan x="16" textLength="126" lengthAdjust="spacing">MOV_REPO=82danass/aws</tspan></text>
+<text y="298" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">MOV_REF=master</tspan></text>
+<text y="313" xml:space="preserve"><tspan x="16" textLength="114" lengthAdjust="spacing">MOV_PATH=v42/public</tspan></text>
+<text y="328" xml:space="preserve"><tspan x="16" textLength="144" lengthAdjust="spacing">MOV_APP_DIR=/opt/mov/app</tspan></text>
+<text y="343" xml:space="preserve"><tspan x="16" textLength="276" lengthAdjust="spacing">DOCS_BUCKET=stk-novatrix-v43-docs-mg03j6v9igq2</tspan></text>
+<text y="358" xml:space="preserve"><tspan x="16" textLength="558" lengthAdjust="spacing">JOBS_URL=https://sqs.eu-north-1.amazonaws.com/████████████/stk-novatrix-v43-Jobs-IWQUWQOBFYOF</tspan></text>
+<text y="373" xml:space="preserve"><tspan x="16" textLength="330" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ aws sts get-caller-identity</tspan></text>
+<text y="388" xml:space="preserve"><tspan x="16" textLength="6" lengthAdjust="spacing">{</tspan></text>
+<text y="403" xml:space="preserve"><tspan x="16" textLength="348" lengthAdjust="spacing">    &quot;UserId&quot;: &quot;AROASPWZHQM3ZRQZP2ZSB:i-03791f21044f104f9&quot;,</tspan></text>
+<text y="418" xml:space="preserve"><tspan x="16" textLength="180" lengthAdjust="spacing">    &quot;Account&quot;: &quot;████████████&quot;,</tspan></text>
+<text y="433" xml:space="preserve"><tspan x="16" textLength="552" lengthAdjust="spacing">    &quot;Arn&quot;: &quot;arn:aws:sts::████████████:assumed-role/rol-novatrix-v43-web/i-03791f21044f104f9&quot;</tspan></text>
+<text y="448" xml:space="preserve"><tspan x="16" textLength="6" lengthAdjust="spacing">}</tspan></text>
+<text y="463" xml:space="preserve"><tspan x="16" textLength="294" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ . /etc/mov/deploy.env</tspan></text>
+<text y="478" xml:space="preserve"><tspan x="16" textLength="468" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ aws s3 cp &quot;s3://$DOCS_BUCKET/results/v43-prov.txt&quot;</tspan></text>
+<text y="508" xml:space="preserve"><tspan x="16" textLength="564" lengthAdjust="spacing">aws: [ERROR]: An error occurred (ParamValidation): the following arguments are required: paths</tspan></text>
+<text y="538" xml:space="preserve"><tspan x="16" textLength="450" lengthAdjust="spacing">usage: aws [options] &lt;command&gt; &lt;subcommand&gt; [&lt;subcommand&gt; ...] [parameters]</tspan></text>
+<text y="553" xml:space="preserve"><tspan x="16" textLength="180" lengthAdjust="spacing">To see help text, you can run:</tspan></text>
+<text y="583" xml:space="preserve"><tspan x="16" textLength="60" lengthAdjust="spacing">  aws help</tspan></text>
+<text y="598" xml:space="preserve"><tspan x="16" textLength="120" lengthAdjust="spacing">  aws &lt;command&gt; help</tspan></text>
+<text y="613" xml:space="preserve"><tspan x="16" textLength="198" lengthAdjust="spacing">  aws &lt;command&gt; &lt;subcommand&gt; help</tspan></text>
+<text y="628" xml:space="preserve"><tspan x="16" textLength="468" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ aws s3 rm &quot;s3://$DOCS_BUCKET/results/v43-prov.txt&quot;</tspan></text>
+<text y="643" xml:space="preserve"><tspan x="16" textLength="1152" lengthAdjust="spacing">delete failed: s3://stk-novatrix-v43-docs-mg03j6v9igq2/results/v43-prov.txt An error occurred (AccessDenied) when calling the DeleteObject operation: User: arn:aws:sts::████████████:assumed-ro</tspan></text>
+<text y="658" xml:space="preserve"><tspan x="16" textLength="1152" lengthAdjust="spacing">le/rol-novatrix-v43-web/i-03791f21044f104f9 is not authorized to perform: s3:DeleteObject on resource: &quot;arn:aws:s3:::stk-novatrix-v43-docs-mg03j6v9igq2/results/v43-prov.txt&quot; because no identit</tspan></text>
+<text y="673" xml:space="preserve"><tspan x="16" textLength="288" lengthAdjust="spacing">y-based policy allows the s3:DeleteObject action</tspan></text>
+<text y="688" xml:space="preserve"><tspan x="16" textLength="192" lengthAdjust="spacing">[awsuser@ip-10-43-1-244 ~]$ exit</tspan></text>
+<text y="703" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing">logout</tspan></text>
+<text y="718" xml:space="preserve"><tspan x="16" textLength="210" lengthAdjust="spacing">Connection to 51.20.192.199 closed.</tspan></text>
+<path d="M0 8 A 8 8 0 0 1 8 0 L 1176 0 A 8 8 0 0 1 1184 8 L 1184 32 L 0 32 Z" fill="#181926"/><text x="16" y="16" fill="#cad3f5" font-size="12" opacity="0.75" text-anchor="start" dominant-baseline="central">pwsh</text><line x1="1064" y1="16" x2="1074" y2="16" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><rect x="1110" y="11" width="10" height="10" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><path d="M1156 11 L1166 21 M1166 11 L1156 21" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/>
+</g>
+</svg>

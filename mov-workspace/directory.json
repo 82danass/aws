@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Arelius-D/mov/main/src/mov/data/schema/aws-directory.schema.json",
+  "policies": [
+    {
+      "purpose": "drift",
+      "description": "Drift kör och lagar v43: ser maskinerna, startar, stoppar och startar om dem som bär env=v43 och läser jobbfunktionens loggar. Kan inte radera maskiner, läsa data eller ändra behörigheter.",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          { "Sid": "SeeMachines", "Effect": "Allow", "Action": ["ec2:DescribeInstances", "ec2:DescribeInstanceStatus"], "Resource": "*" },
+          { "Sid": "RunV43Machines", "Effect": "Allow", "Action": ["ec2:StartInstances", "ec2:StopInstances", "ec2:RebootInstances"], "Resource": "arn:aws:ec2:eu-north-1:*:instance/*", "Condition": { "StringEquals": { "aws:ResourceTag/env": "v43" } } },
+          { "Sid": "ReadHandlerLogs", "Effect": "Allow", "Action": ["logs:DescribeLogStreams", "logs:GetLogEvents", "logs:FilterLogEvents"], "Resource": "arn:aws:logs:eu-north-1:*:log-group:stk-novatrix-v43-*" }
+        ]
+      }
+    },
+    {
+      "purpose": "utveckling",
+      "description": "Utveckling ändrar jobbfunktionens kod och felsöker: läser funktionen, laddar upp ny kod och läser resultaten och loggarna. Kan inte byta funktionens roll eller inställningar, starta eller stoppa maskiner eller radera data.",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          { "Sid": "ChangeHandlerCode", "Effect": "Allow", "Action": ["lambda:GetFunction", "lambda:UpdateFunctionCode"], "Resource": "arn:aws:lambda:eu-north-1:*:function:stk-novatrix-v43-*" },
+          { "Sid": "ReadResults", "Effect": "Allow", "Action": "s3:GetObject", "Resource": "arn:aws:s3:::stk-novatrix-v43-docs-*/results/*" },
+          { "Sid": "ReadHandlerLogs", "Effect": "Allow", "Action": ["logs:DescribeLogStreams", "logs:GetLogEvents", "logs:FilterLogEvents"], "Resource": "arn:aws:logs:eu-north-1:*:log-group:stk-novatrix-v43-*" }
+        ]
+      }
+    },
+    {
+      "purpose": "granskning",
+      "description": "Granskning läser Novatrix roller, grupper, användare och policies och kör själv IAM:s policysimulator mot dem. Ändrar ingenting och läser ingen data.",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          { "Sid": "ReadIdentities", "Effect": "Allow", "Action": ["iam:GetRole", "iam:ListAttachedRolePolicies", "iam:GetGroup", "iam:ListAttachedGroupPolicies", "iam:GetUser", "iam:ListGroupsForUser", "iam:ListAttachedUserPolicies"], "Resource": ["arn:aws:iam::*:role/rol-novatrix-*", "arn:aws:iam::*:group/grp-novatrix-*", "arn:aws:iam::*:user/usr-novatrix-*"] },
+          { "Sid": "ReadPolicies", "Effect": "Allow", "Action": ["iam:GetPolicy", "iam:GetPolicyVersion"], "Resource": "arn:aws:iam::*:policy/pol-novatrix-*" },
+          { "Sid": "Simulate", "Effect": "Allow", "Action": ["iam:SimulatePrincipalPolicy", "iam:GetContextKeysForPrincipalPolicy"], "Resource": ["arn:aws:iam::*:role/rol-novatrix-*", "arn:aws:iam::*:user/usr-novatrix-*"] }
+        ]
+      }
+    }
+  ],
+  "groups": [
+    { "purpose": "drift", "displayName": "Novatrix Drift", "description": "Kör och lagar miljön.", "policies": [{ "policy": "drift" }] },
+    { "purpose": "utveckling", "displayName": "Novatrix Utveckling", "description": "Ändrar jobbfunktionens kod och felsöker.", "policies": [{ "policy": "utveckling" }] },
+    { "purpose": "granskning", "displayName": "Novatrix Granskning", "description": "Läser allt om behörigheterna, ändrar ingenting.", "policies": [{ "policy": "granskning" }] }
+  ],
+  "users": [
+    { "purpose": "anna", "displayName": "Anna Lindqvist (drift)", "groups": ["drift"], "for": "anna.lindqvist@novatrix.example", "origin": "internal" },
+    { "purpose": "erik", "displayName": "Erik Holm (utveckling)", "groups": ["utveckling"], "for": "erik.holm@novatrix.example", "origin": "internal" },
+    { "purpose": "kim", "displayName": "Kim Tran (Acme Consulting)", "groups": ["utveckling"], "for": "kim.tran@acme-consulting.example", "origin": "external", "expires": "2026-12-31" },
+    { "purpose": "lars", "displayName": "Lars Moen (NordSec)", "groups": ["granskning"], "for": "lars.moen@nordsec.example", "origin": "external", "expires": "2026-12-31" }
+  ]
+}

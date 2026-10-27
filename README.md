@@ -15,11 +15,11 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 - [x] Kostnadskontroll: månadsbudget i AWS Budgets med larm på faktisk och prognostiserad kostnad
 
 ### [v43 — IAM och identitet](v43/README.md)
-- [ ] Skapa avsnitt för v43 och uppdatera README
-- [ ] Skapa IAM-användare och grupper för Novatrix roller, t.ex. drift och utveckling
-- [ ] Skapa och koppla policies enligt least privilege
-- [ ] Skapa en IAM-roll som låter en AWS-tjänst nå en annan
-- [ ] Verifiera och dokumentera
+- [x] Skapa avsnitt för v43 och uppdatera README
+- [x] Skapa IAM-användare och grupper för Novatrix roller, t.ex. drift och utveckling
+- [x] Skapa och koppla policies enligt least privilege
+- [x] Skapa en IAM-roll som låter en AWS-tjänst nå en annan
+- [x] Verifiera och dokumentera
 
 ### [v44 — Nätverk och säkerhet](v44/README.md)
 - [ ] Skapa avsnitt för v44 och uppdatera README
