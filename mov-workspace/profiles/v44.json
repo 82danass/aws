@@ -1,0 +1,46 @@
+{
+  "env": "v44",
+  "extends": "v42",
+  "description": "Nätverket för Novatrix i flera lager: ett VPC med ett publikt subnät för webbservern och två privata subnät i var sin zon för nästa veckas databas. Security groups och NACL:er släpper bara igenom webbtrafik på HTTP och HTTPS och administration över SSH från en enda adress; allt annat är stängt.",
+  "network": {
+    "addressSpace": "10.44.0.0/16",
+    "subnets": [
+      { "purpose": "web", "prefix": "10.44.1.0/24", "zone": "eu-north-1a", "acl": "public" },
+      { "purpose": "data1", "prefix": "10.44.11.0/24", "private": true, "zone": "eu-north-1a", "acl": "private" },
+      { "purpose": "data2", "prefix": "10.44.12.0/24", "private": true, "zone": "eu-north-1b", "acl": "private" }
+    ],
+    "securityGroups": {
+      "web": [
+        { "name": "http", "ports": ["80"], "source": "*" },
+        { "name": "https", "ports": ["443"], "source": "*" },
+        { "name": "ssh", "ports": ["22"], "source": "${admin.sshSource}" }
+      ],
+      "db": [
+        { "name": "mysql", "ports": ["3306"], "source": "web" }
+      ]
+    },
+    "acls": {
+      "public": [
+        { "name": "web-in", "priority": 100, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["80", "443"], "source": "*", "destination": "*" },
+        { "name": "ssh-in", "priority": 110, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["22"], "source": "${admin.sshSource}", "destination": "*" },
+        { "name": "replies-in", "priority": 200, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "*" },
+        { "name": "updates-out", "priority": 100, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["80", "443"], "source": "*", "destination": "*" },
+        { "name": "db-data1-out", "priority": 110, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "*", "destination": "data1" },
+        { "name": "db-data2-out", "priority": 120, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "*", "destination": "data2" },
+        { "name": "replies-out", "priority": 200, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "*" }
+      ],
+      "private": [
+        { "name": "db-from-web", "priority": 100, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "web", "destination": "*" },
+        { "name": "replies-to-web", "priority": 200, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "web" }
+      ]
+    }
+  },
+  "verify": {
+    "host": [
+      { "name": "cloud-init", "run": "cloud-init status --wait >/dev/null; cloud-init status | head -n 1", "expect": "status: done" },
+      { "name": "nginx", "run": "systemctl is-active nginx", "expect": "active" },
+      { "name": "bootstrap", "run": "test -f /etc/mov/deployed.json && echo present", "expect": "present" },
+      { "name": "https-out", "run": "curl -s -o /dev/null -w '%{http_code}' https://checkip.amazonaws.com", "expect": "200" }
+    ]
+  }
+}

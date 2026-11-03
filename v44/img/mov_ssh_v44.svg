@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="758" height="334" viewBox="0 0 758 334" font-family="MesloLGS NF, monospace, 'Cascadia Mono', Consolas, 'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="10" fill="#cad3f5">
+<defs><clipPath id="win"><rect width="758" height="334" rx="8" ry="8"/></clipPath></defs><g clip-path="url(#win)">
+<rect y="32" width="758" height="302" fill="#24273a"/>
+
+<text y="58" xml:space="preserve"><tspan x="16" textLength="18" lengthAdjust="spacing" fill="#e1c682">mov</tspan><tspan x="34" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="40" textLength="18" lengthAdjust="spacing" fill="#a5adcb">ssh</tspan><tspan x="58" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="64" textLength="18" lengthAdjust="spacing" fill="#a5adcb">v44</tspan></text>
+<text y="73" xml:space="preserve"><tspan x="16" textLength="78" lengthAdjust="spacing" fill="#8bd5ca">mov-workspace</tspan><tspan x="94" textLength="6" lengthAdjust="spacing"> </tspan><tspan x="100" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="106" textLength="156" lengthAdjust="spacing"> aws account ████████████ </tspan><tspan x="262" textLength="6" lengthAdjust="spacing" opacity="0.5">·</tspan><tspan x="268" textLength="108" lengthAdjust="spacing"> region eu-north-1</tspan></text>
+<text y="88" xml:space="preserve"><tspan x="16" textLength="396" lengthAdjust="spacing" opacity="0.5">ssh -F &quot;D:/MOV25/GitHub/aws/mov-workspace/keys/ssh_config&quot; v44-web</tspan></text>
+<text y="103" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">   ,     #_</tspan></text>
+<text y="118" xml:space="preserve"><tspan x="16" textLength="228" lengthAdjust="spacing">   ~\_  ####_        Amazon Linux 2023</tspan></text>
+<text y="133" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~  \_#####\</tspan></text>
+<text y="148" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">  ~~     \###|</tspan></text>
+<text y="163" xml:space="preserve"><tspan x="16" textLength="402" lengthAdjust="spacing">  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023</tspan></text>
+<text y="178" xml:space="preserve"><tspan x="16" textLength="114" lengthAdjust="spacing">   ~~       V~' '-&gt;</tspan></text>
+<text y="193" xml:space="preserve"><tspan x="16" textLength="102" lengthAdjust="spacing">    ~~~         /</tspan></text>
+<text y="208" xml:space="preserve"><tspan x="16" textLength="96" lengthAdjust="spacing">      ~~._.   _/</tspan></text>
+<text y="223" xml:space="preserve"><tspan x="16" textLength="84" lengthAdjust="spacing">         _/ _/</tspan></text>
+<text y="238" xml:space="preserve"><tspan x="16" textLength="72" lengthAdjust="spacing">       _/m/'</tspan></text>
+<text y="253" xml:space="preserve"><tspan x="16" textLength="726" lengthAdjust="spacing">[awsuser@ip-10-44-1-190 ~]$ hostname -I &amp;&amp; curl -s -o /dev/null -w '%{http_code}\n' https://checkip.amazonaws.com &amp;&amp; exit</tspan></text>
+<text y="268" xml:space="preserve"><tspan x="16" textLength="66" lengthAdjust="spacing">10.44.1.190</tspan></text>
+<text y="283" xml:space="preserve"><tspan x="16" textLength="18" lengthAdjust="spacing">200</tspan></text>
+<text y="298" xml:space="preserve"><tspan x="16" textLength="36" lengthAdjust="spacing">logout</tspan></text>
+<text y="313" xml:space="preserve"><tspan x="16" textLength="198" lengthAdjust="spacing">Connection to 13.48.70.20 closed.</tspan></text>
+<path d="M0 8 A 8 8 0 0 1 8 0 L 750 0 A 8 8 0 0 1 758 8 L 758 32 L 0 32 Z" fill="#181926"/><text x="16" y="16" fill="#cad3f5" font-size="12" opacity="0.75" text-anchor="start" dominant-baseline="central">pwsh</text><line x1="638" y1="16" x2="648" y2="16" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><rect x="684" y="11" width="10" height="10" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/><path d="M730 11 L740 21 M740 11 L730 21" stroke="#cad3f5" stroke-width="1" fill="none" opacity="0.9"/>
+</g>
+</svg>

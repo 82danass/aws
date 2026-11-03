@@ -22,11 +22,11 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 - [x] Verifiera och dokumentera
 
 ### [v44 — Nätverk och säkerhet](v44/README.md)
-- [ ] Skapa avsnitt för v44 och uppdatera README
-- [ ] Bygg ett VPC med publika och privata subnät, route tables och internet gateway
-- [ ] Säkra trafiken med security groups och NACL:er
-- [ ] Placera webbservern i ett publikt subnät och förbered ett privat subnät för databasen
-- [ ] Verifiera och dokumentera nätverket med en skiss
+- [x] Skapa avsnitt för v44 och uppdatera README
+- [x] Bygg ett VPC med publika och privata subnät, route tables och internet gateway
+- [x] Säkra trafiken med security groups och NACL:er
+- [x] Placera webbservern i ett publikt subnät och förbered ett privat subnät för databasen
+- [x] Verifiera och dokumentera nätverket med en skiss
 
 ### [v45 — Storage och databas](v45/README.md)
 - [ ] Skapa avsnitt för v45 och uppdatera README

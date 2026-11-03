@@ -18,7 +18,9 @@
     "resource": "{purpose}-{company}-{env}",
     "iamRole": "rol-{company}-{env}-{purpose}",
     "iamInstanceProfile": "ipr-{company}-{env}-{purpose}",
-    "iamPolicy": "pol-{company}-{purpose}"
+    "iamPolicy": "pol-{company}-{purpose}",
+    "ec2PrivateRouteTable": "rt-{company}-{env}-private",
+    "ec2NetworkAcl": "acl-{company}-{env}-{purpose}"
   },
   "rules": {
     "default": {
