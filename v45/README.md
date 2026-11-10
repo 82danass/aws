@@ -143,19 +143,9 @@ Webbserverns behörigheter står i policyn `pol-novatrix-v45-web`:
 
 ## Verifiering
 
-`mov plan v45` innan något finns:
-
 ![mov use --login och mov plan v45: inloggad som usr-novatrix-sysop, preflight med zonerna och NACL:ernas regler, CloudFormations scheman hämtade och varje resurs prövad mot dem, sedan budgeten och stacken som skulle byggas](img/mov_plan_v45.svg)
 
-`mov plan` hämtar CloudFormations scheman för regionen och prövar databasen, filsystemet, bucketen och policyn mot dem innan något skapas.
-
-`mov up v45`
-
 ![mov up v45: budgeten, stacken med nätet, rollen, bucketen, EFS och dess två mount targets, databasen efter 8 minuter och 11 sekunder och sist webbservern och policyn](img/mov_up_v45.svg)
-
-Databasen tar längst tid, 8 minuter och 11 sekunder. Webbservern skapas efter databasen eftersom den behöver databasens adress.
-
-`mov up v45 --stage verify`
 
 ![mov up v45 --stage verify: sidan svarar 200 och varje kontroll på maskinen är OK](img/mov_verify_v45.svg)
 
@@ -181,9 +171,7 @@ curl -s http://51.20.74.85/ | Select-String "<title>"
 <title>Novatrix AB</title>
 ```
 
-Sidan svarar 200 och titeln kommer ur databasen: WordPress läser `blogname` ur RDS för varje sida den visar.
-
-`mov status v45`
+Titeln kommer ur databasen: WordPress läser `blogname` ur RDS för varje sida den visar.
 
 ![mov status v45: stk-novatrix-v45, stegen med tid, verifieringens svar och resurserna i stacken](img/mov_status_v45.svg)
 
