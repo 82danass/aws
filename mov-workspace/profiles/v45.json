@@ -1,0 +1,159 @@
+{
+  "env": "v45",
+  "extends": "v44",
+  "description": "WordPress för Novatrix på nätverket från v44: databasen i RDS med MariaDB i de privata subnäten, WordPress-filerna på EFS och en daglig dump av databasen i en S3-bucket som tar bort dumpar äldre än 14 dagar. Databasen når bara webbservern och filerna bara webbservern.",
+  "network": {
+    "securityGroups": {
+      "files": [
+        { "name": "nfs", "ports": ["2049"], "source": "web" }
+      ]
+    },
+    "acls": {
+      "public": [
+        { "name": "web-in", "priority": 100, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["80", "443"], "source": "*", "destination": "*" },
+        { "name": "ssh-in", "priority": 110, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["22"], "source": "${admin.sshSource}", "destination": "*" },
+        { "name": "replies-in", "priority": 200, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "*" },
+        { "name": "updates-out", "priority": 100, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["80", "443"], "source": "*", "destination": "*" },
+        { "name": "db-data1-out", "priority": 110, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "*", "destination": "data1" },
+        { "name": "db-data2-out", "priority": 120, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "*", "destination": "data2" },
+        { "name": "nfs-data1-out", "priority": 130, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["2049"], "source": "*", "destination": "data1" },
+        { "name": "nfs-data2-out", "priority": 140, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["2049"], "source": "*", "destination": "data2" },
+        { "name": "replies-out", "priority": 200, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "*" }
+      ],
+      "private": [
+        { "name": "db-from-web", "priority": 100, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["3306"], "source": "web", "destination": "*" },
+        { "name": "nfs-from-web", "priority": 110, "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "ports": ["2049"], "source": "web", "destination": "*" },
+        { "name": "replies-to-web", "priority": 200, "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "ports": ["1024-65535"], "source": "*", "destination": "web" }
+      ]
+    }
+  },
+  "identity": {
+    "userAssigned": [
+      { "purpose": "web", "description": "Webbservern: läser databasens lösenord ur Secrets Manager och lägger dumpar i backup-bucketen, inget annat." }
+    ]
+  },
+  "compute": {
+    "vms": [
+      {
+        "purpose": "web",
+        "image": "AmazonLinux2023",
+        "subnet": "web",
+        "securityGroup": "web",
+        "app": true,
+        "identities": ["web"],
+        "environment": {
+          "DB_HOST": "@attribute:db.Endpoint.Address",
+          "DB_NAME": "wordpress",
+          "DB_SECRET": "@attribute:db.MasterUserSecret.SecretArn",
+          "EFS_ID": "@resourceId:files",
+          "BACKUP_BUCKET": "@resourceId:backups"
+        },
+        "source": {
+          "repo": "82danass/aws",
+          "ref": "master",
+          "path": "v45",
+          "bootstrap": "scripts/wordpress.sh",
+          "auth": "public"
+        }
+      }
+    ]
+  },
+  "resources": [
+    {
+      "type": "AWS::RDS::DBSubnetGroup",
+      "purpose": "dbsubnets",
+      "properties": {
+        "DBSubnetGroupDescription": "De två privata subnäten, ett i varje zon.",
+        "SubnetIds": ["@output:network.subnet.data1", "@output:network.subnet.data2"]
+      }
+    },
+    {
+      "type": "AWS::RDS::DBInstance",
+      "purpose": "db",
+      "properties": {
+        "Engine": "mariadb",
+        "DBInstanceClass": "db.t4g.micro",
+        "AllocatedStorage": "20",
+        "StorageType": "gp2",
+        "StorageEncrypted": true,
+        "DBName": "wordpress",
+        "MasterUsername": "wpadmin",
+        "ManageMasterUserPassword": true,
+        "DBSubnetGroupName": "@resourceId:dbsubnets",
+        "VPCSecurityGroups": ["@output:network.securityGroup.db"],
+        "PubliclyAccessible": false,
+        "MultiAZ": false,
+        "BackupRetentionPeriod": 1,
+        "DeleteAutomatedBackups": true,
+        "DeletionProtection": false
+      }
+    },
+    {
+      "type": "AWS::EFS::FileSystem",
+      "purpose": "files",
+      "properties": {
+        "Encrypted": true,
+        "PerformanceMode": "generalPurpose",
+        "ThroughputMode": "bursting"
+      }
+    },
+    {
+      "type": "AWS::EFS::MountTarget",
+      "purpose": "files1",
+      "properties": {
+        "FileSystemId": "@resourceId:files",
+        "SubnetId": "@output:network.subnet.data1",
+        "SecurityGroups": ["@output:network.securityGroup.files"]
+      }
+    },
+    {
+      "type": "AWS::EFS::MountTarget",
+      "purpose": "files2",
+      "properties": {
+        "FileSystemId": "@resourceId:files",
+        "SubnetId": "@output:network.subnet.data2",
+        "SecurityGroups": ["@output:network.securityGroup.files"]
+      }
+    },
+    {
+      "type": "AWS::S3::Bucket",
+      "purpose": "backups",
+      "properties": {
+        "PublicAccessBlockConfiguration": { "BlockPublicAcls": true, "BlockPublicPolicy": true, "IgnorePublicAcls": true, "RestrictPublicBuckets": true },
+        "OwnershipControls": { "Rules": [{ "ObjectOwnership": "BucketOwnerEnforced" }] },
+        "BucketEncryption": { "ServerSideEncryptionConfiguration": [{ "ServerSideEncryptionByDefault": { "SSEAlgorithm": "AES256" } }] },
+        "LifecycleConfiguration": { "Rules": [{ "Id": "db-dumps", "Status": "Enabled", "Prefix": "db/", "ExpirationInDays": 14 }] }
+      }
+    },
+    {
+      "type": "AWS::IAM::ManagedPolicy",
+      "purpose": "webaccess",
+      "name": "pol-novatrix-${env}-web",
+      "properties": {
+        "ManagedPolicyName": "pol-novatrix-${env}-web",
+        "Description": "Webbserverns behörigheter: läsa databasens lösenord och lägga dumpar under db/ i backup-bucketen.",
+        "Roles": ["@resourceId:web"],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            { "Sid": "ReadDbSecret", "Effect": "Allow", "Action": "secretsmanager:GetSecretValue", "Resource": "@attribute:db.MasterUserSecret.SecretArn" },
+            { "Sid": "WriteDumps", "Effect": "Allow", "Action": "s3:PutObject", "Resource": { "Fn::Sub": "${Backups.Arn}/db/*" } },
+            { "Sid": "ListDumps", "Effect": "Allow", "Action": "s3:ListBucket", "Resource": "@attribute:backups.Arn" }
+          ]
+        }
+      }
+    }
+  ],
+  "verify": {
+    "timeoutSeconds": 900,
+    "host": [
+      { "name": "cloud-init", "run": "cloud-init status --wait >/dev/null; cloud-init status | head -n 1", "expect": "status: done" },
+      { "name": "httpd", "run": "systemctl is-active httpd", "expect": "active" },
+      { "name": "bootstrap", "run": "test -f /etc/mov/deployed.json && echo present", "expect": "present" },
+      { "name": "efs", "run": "findmnt -n -o FSTYPE --target /var/www/html/wp-content", "expect": "nfs4" },
+      { "name": "wordpress-db", "run": "sudo /usr/local/bin/wp --path=/var/www/html --allow-root option get blogname", "expect": "Novatrix AB" },
+      { "name": "db-private", "run": ". /etc/mov/deploy.env && getent hosts \"$DB_HOST\" | awk '{print $1}' | cut -d. -f1-2", "expect": "10.44" },
+      { "name": "backup", "run": ". /etc/mov/deploy.env && aws s3 ls \"s3://$BACKUP_BUCKET/db/\" --region eu-north-1 | grep -q 'sql.gz$' && echo present", "expect": "present" }
+    ]
+  }
+}
