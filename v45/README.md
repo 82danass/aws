@@ -371,8 +371,6 @@ En inloggning i AWS CLI varar högst tolv timmar, så nästa dag är det `mov us
 
 ### Riva miljön när jag är klar
 
-```powershell
-mov down v45 -y --wait
-```
+![mov down v45 -y --wait: stacken med sina 46 resurser, bucketen tömd på sin dump, budgeten, stacken, SSH-posten och nyckeln borttagna](img/mov_down_v45.svg)
 
-Bucketen töms först eftersom CloudFormation inte raderar en bucket som innehåller något. Sedan går budgeten, stacken, SSH-posten och nyckeln. CloudFormation tar en sista snapshot av databasen när den raderas, så den ligger kvar under RDS snapshots tills den tas bort.
+Bucketen töms först eftersom CloudFormation inte raderar en bucket som innehåller något. Sedan går budgeten, stacken, SSH-posten och nyckeln. CloudFormation tar en sista snapshot av databasen när den raderas, `stk-novatrix-v45-snapshot-db-9xrkuejs9dwv` på 20 GB. Den ligger kvar under RDS snapshots tills den tas bort.
