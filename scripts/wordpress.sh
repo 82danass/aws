@@ -106,6 +106,8 @@ fi
 if [[ ! -f $DOCROOT/wp-config.php ]]; then
     wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASSWORD" --dbhost="$DB_HOST" --skip-check
 fi
+# RDS for MariaDB refuses a connection without TLS (require_secure_transport).
+wp config set MYSQL_CLIENT_FLAGS MYSQLI_CLIENT_SSL --raw --type=constant
 if ! wp core is-installed 2>/dev/null; then
     log "installing WordPress against $DB_HOST"
     ADMIN_PASSWORD=$(openssl rand -base64 18)
@@ -132,7 +134,7 @@ export AWS_DEFAULT_REGION=$(curl -sf -H "X-aws-ec2-metadata-token: $TOKEN" http:
 SECRET=$(aws secretsmanager get-secret-value --secret-id "$DB_SECRET" --query SecretString --output text)
 DB_USER=$(python3 -c 'import json, sys; print(json.load(sys.stdin)["username"])' <<<"$SECRET")
 export MYSQL_PWD=$(python3 -c 'import json, sys; print(json.load(sys.stdin)["password"])' <<<"$SECRET")
-mysqldump --single-transaction -h "$DB_HOST" -u "$DB_USER" "$DB_NAME" | gzip \
+mysqldump --ssl --single-transaction -h "$DB_HOST" -u "$DB_USER" "$DB_NAME" | gzip \
     | aws s3 cp - "s3://$BACKUP_BUCKET/db/$DB_NAME-$(date -u +%Y%m%dT%H%M%SZ).sql.gz"
 BACKUP
 chmod 0755 /usr/local/bin/wordpress-backup
