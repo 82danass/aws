@@ -95,7 +95,8 @@ if [[ ! -x $WP ]]; then
     curl -sfL -o "$WP" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     chmod 0755 "$WP"
 fi
-wp() { "$WP" --path="$DOCROOT" --allow-root "$@"; }
+# Unpacking WordPress takes more than PHP's 128 MB default.
+wp() { php -d memory_limit=512M "$WP" --path="$DOCROOT" --allow-root "$@"; }
 
 # The files are on EFS, so a second server finds WordPress there already.
 if [[ ! -f $DOCROOT/wp-includes/version.php ]]; then
