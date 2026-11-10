@@ -29,13 +29,13 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 - [x] Verifiera och dokumentera nätverket med en skiss
 
 ### [v45 — Storage och databas](v45/README.md)
-- [ ] Skapa avsnitt för v45 och uppdatera README
-- [ ] Provisionera en databas i RDS med MariaDB/MySQL i ett privat subnät
-- [ ] Sätt upp delad lagring i EFS för WordPress-filerna
-- [ ] Skapa en S3-bucket för databasens backup, med livscykelregel på 14 dagar och automatisk backup i RDS
-- [ ] Installera WordPress och koppla den mot databasen och den delade lagringen
-- [ ] Säkra åtkomsten i lager
-- [ ] Verifiera och dokumentera
+- [x] Skapa avsnitt för v45 och uppdatera README
+- [x] Provisionera en databas i RDS med MariaDB/MySQL i ett privat subnät
+- [x] Sätt upp delad lagring i EFS för WordPress-filerna
+- [x] Skapa en S3-bucket för databasens backup, med livscykelregel på 14 dagar och automatisk backup i RDS
+- [x] Installera WordPress och koppla den mot databasen och den delade lagringen
+- [x] Säkra åtkomsten i lager
+- [x] Verifiera och dokumentera
 
 ### [v46 — IaC med CloudFormation](v46/README.md)
 - [ ] Skapa avsnitt för v46 med templates versionshanterade i repot
