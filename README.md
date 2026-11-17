@@ -38,11 +38,11 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 - [x] Verifiera och dokumentera
 
 ### [v46 — IaC med CloudFormation](v46/README.md)
-- [ ] Skapa avsnitt för v46 med templates versionshanterade i repot
-- [ ] Skriv CloudFormation-template(s) för centrala delar av stacken
-- [ ] Deploya stacken från kod
-- [ ] Visa versionshantering (ändring och historik)
-- [ ] Dokumentera hur stacken återskapas
+- [x] Skapa avsnitt för v46 med templates versionshanterade i repot
+- [x] Skriv CloudFormation-template(s) för centrala delar av stacken
+- [x] Deploya stacken från kod
+- [x] Visa versionshantering (ändring och historik)
+- [x] Dokumentera hur stacken återskapas
 
 ### [v47 — Skalbarhet och tillgänglighet](v47/README.md)
 - [ ] Skapa avsnitt för v47 och uppdatera README
