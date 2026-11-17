@@ -255,11 +255,7 @@ Veckans ändring: dumparna i backup-bucketen sparas i 30 dagar i stället för 1
 +            "ExpirationInDays": 30
 ```
 
-```powershell
-git add mov-workspace/profiles/v46.json v46/cloudformation
-git commit -m "v46: database dumps kept for 30 days"
-git --no-pager log --oneline -- mov-workspace/profiles/v46.json v46/cloudformation
-```
+![git add, git commit och git log: ändringen committad som ebd3077 ovanpå 27180d6, där stacken först deployades](img/git_log_v46.svg)
 
 Nästa `mov up v46` för ut ändringen. `mov plan v46` visar den först som ett change set: `Modify AWS::S3::Bucket Backups` och policyn `Webaccess` som pekar på bucketen.
 
