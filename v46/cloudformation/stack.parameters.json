@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "WebImage",
+    "ParameterValue": "ami-0f71b90bee7050a75"
+  },
+  {
+    "ParameterKey": "WebUserData",
+    "ParameterValue": "#cloud-config\nusers:\n  - name: \"awsuser\"\n    shell: \"/bin/bash\"\n    sudo: \"ALL=(ALL) NOPASSWD:ALL\"\n    lock_passwd: true\n    ssh_authorized_keys:\n      - \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII09aAH4nB51WiDs/YSaWdGiOqdPtmkld5DSqBHCuko2 mov-mov-v46\"\n# Rendered by mov from the env's profile. The site is never uploaded from the\n# workstation: the host clones it from GitHub, so the machine is reproducible\n# from the repository alone.\npackage_update: true\npackage_upgrade: true\n# Never here: a reboot owed by the upgrade is given by mov's verify stage,\n# after the checks pass and before they run again.\npackage_reboot_if_required: false\n\npackages:\n  - git\n\nwrite_files:\n  - path: /etc/mov/deploy.env\n    permissions: '0644'\n    content: |\n      MOV_ENV=v46\n      MOV_REPO=82danass/aws\n      MOV_REF=master\n      MOV_PATH=v45\n      MOV_APP_DIR=/opt/mov/app\n      MOV_ENVIRONMENT_HERE=here\n\nruncmd:\n  - [ mkdir, -p, '/opt/mov/app' ]\n  - [ git, clone, --depth, '1', --branch, 'master', 'https://github.com/82danass/aws.git', '/opt/mov/app' ]\n  - [ bash, '/opt/mov/app/scripts/wordpress.sh' ]\n\nfinal_message: \"mov: v46 bootstrap finished\"\n"
+  }
+]

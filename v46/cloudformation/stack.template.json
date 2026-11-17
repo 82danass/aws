@@ -1,0 +1,944 @@
+{
+  "Parameters": {
+    "WebImage": {
+      "Type": "AWS::EC2::Image::Id"
+    },
+    "WebUserData": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.44.0.0/16",
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "vpc-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "igw-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "GatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicRoutes": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "rt-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "DefaultRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "GatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRoutes"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PrivateRoutes": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "rt-novatrix-v46-private"
+          }
+        ]
+      }
+    },
+    "WebSubnetAcl": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "WebSubnet"
+        },
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        }
+      }
+    },
+    "WebSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.44.1.0/24",
+        "AvailabilityZone": "eu-north-1a",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "snet-novatrix-v46-web"
+          }
+        ]
+      }
+    },
+    "WebSubnetRoutes": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "WebSubnet"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRoutes"
+        }
+      }
+    },
+    "Data1SubnetAcl": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Data1Subnet"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateAcl"
+        }
+      }
+    },
+    "Data1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.44.11.0/24",
+        "AvailabilityZone": "eu-north-1a",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "snet-novatrix-v46-data1"
+          }
+        ]
+      }
+    },
+    "Data1SubnetRoutes": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Data1Subnet"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRoutes"
+        }
+      }
+    },
+    "Data2SubnetAcl": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Data2Subnet"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateAcl"
+        }
+      }
+    },
+    "Data2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.44.12.0/24",
+        "AvailabilityZone": "eu-north-1b",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "snet-novatrix-v46-data2"
+          }
+        ]
+      }
+    },
+    "Data2SubnetRoutes": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Data2Subnet"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRoutes"
+        }
+      }
+    },
+    "WebSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "sgr-novatrix-v46-web",
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "CidrIp": "0.0.0.0/0",
+            "Description": "http",
+            "FromPort": 80,
+            "ToPort": 80
+          },
+          {
+            "IpProtocol": "tcp",
+            "CidrIp": "0.0.0.0/0",
+            "Description": "https",
+            "FromPort": 443,
+            "ToPort": 443
+          },
+          {
+            "IpProtocol": "tcp",
+            "CidrIp": "188.150.116.250/32",
+            "Description": "ssh",
+            "FromPort": 22,
+            "ToPort": 22
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "sgr-novatrix-v46-web"
+          }
+        ]
+      }
+    },
+    "DbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "sgr-novatrix-v46-db",
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "SecurityGroupIngress": [],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "sgr-novatrix-v46-db"
+          }
+        ]
+      }
+    },
+    "DbSecurityGroupFromWebTcp3306": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "DbSecurityGroup"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "WebSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "Description": "mysql",
+        "FromPort": 3306,
+        "ToPort": 3306
+      }
+    },
+    "FilesSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "sgr-novatrix-v46-files",
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "SecurityGroupIngress": [],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "sgr-novatrix-v46-files"
+          }
+        ]
+      }
+    },
+    "FilesSecurityGroupFromWebTcp2049": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "FilesSecurityGroup"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "WebSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "Description": "nfs",
+        "FromPort": 2049,
+        "ToPort": 2049
+      }
+    },
+    "PublicAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "acl-novatrix-v46-public"
+          }
+        ]
+      }
+    },
+    "PublicAclIn100": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 100,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 80,
+          "To": 80
+        }
+      }
+    },
+    "PublicAclIn101": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 101,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 443,
+          "To": 443
+        }
+      }
+    },
+    "PublicAclIn110": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 110,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "188.150.116.250/32",
+        "PortRange": {
+          "From": 22,
+          "To": 22
+        }
+      }
+    },
+    "PublicAclIn200": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 200,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 1024,
+          "To": 65535
+        }
+      }
+    },
+    "PublicAclOut100": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 100,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 80,
+          "To": 80
+        }
+      }
+    },
+    "PublicAclOut101": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 101,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 443,
+          "To": 443
+        }
+      }
+    },
+    "PublicAclOut110": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 110,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "10.44.11.0/24",
+        "PortRange": {
+          "From": 3306,
+          "To": 3306
+        }
+      }
+    },
+    "PublicAclOut120": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 120,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "10.44.12.0/24",
+        "PortRange": {
+          "From": 3306,
+          "To": 3306
+        }
+      }
+    },
+    "PublicAclOut130": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 130,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "10.44.11.0/24",
+        "PortRange": {
+          "From": 2049,
+          "To": 2049
+        }
+      }
+    },
+    "PublicAclOut140": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 140,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "10.44.12.0/24",
+        "PortRange": {
+          "From": 2049,
+          "To": 2049
+        }
+      }
+    },
+    "PublicAclOut200": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicAcl"
+        },
+        "RuleNumber": 200,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": 1024,
+          "To": 65535
+        }
+      }
+    },
+    "PrivateAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "acl-novatrix-v46-private"
+          }
+        ]
+      }
+    },
+    "PrivateAclIn100": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PrivateAcl"
+        },
+        "RuleNumber": 100,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "10.44.1.0/24",
+        "PortRange": {
+          "From": 3306,
+          "To": 3306
+        }
+      }
+    },
+    "PrivateAclIn110": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PrivateAcl"
+        },
+        "RuleNumber": 110,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": false,
+        "CidrBlock": "10.44.1.0/24",
+        "PortRange": {
+          "From": 2049,
+          "To": 2049
+        }
+      }
+    },
+    "PrivateAclOut200": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PrivateAcl"
+        },
+        "RuleNumber": 200,
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": true,
+        "CidrBlock": "10.44.1.0/24",
+        "PortRange": {
+          "From": 1024,
+          "To": 65535
+        }
+      }
+    },
+    "WebRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "rol-novatrix-v46-web",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "rol-novatrix-v46-web"
+          }
+        ],
+        "Description": "Webbservern: l\u00e4ser databasens l\u00f6senord ur Secrets Manager och l\u00e4gger dumpar i backup-bucketen, inget annat."
+      }
+    },
+    "WebInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "InstanceProfileName": "ipr-novatrix-v46-web",
+        "Roles": [
+          {
+            "Ref": "WebRole"
+          }
+        ]
+      }
+    },
+    "WebInstance": {
+      "Type": "AWS::EC2::Instance",
+      "DependsOn": [
+        "DefaultRoute",
+        "WebSubnetRoutes"
+      ],
+      "Properties": {
+        "ImageId": {
+          "Ref": "WebImage"
+        },
+        "InstanceType": "t3.micro",
+        "MetadataOptions": {
+          "HttpTokens": "required"
+        },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "VolumeType": "gp3",
+              "VolumeSize": 8,
+              "Encrypted": true,
+              "DeleteOnTermination": true
+            }
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeviceIndex": "0",
+            "SubnetId": {
+              "Ref": "WebSubnet"
+            },
+            "GroupSet": [
+              {
+                "Ref": "WebSecurityGroup"
+              }
+            ],
+            "AssociatePublicIpAddress": true,
+            "DeleteOnTermination": true
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "      MOV_ENVIRONMENT_HERE=here\n",
+                        {
+                          "Ref": "WebUserData"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "      DB_HOST=",
+                {
+                  "Fn::GetAtt": [
+                    "Db",
+                    "Endpoint.Address"
+                  ]
+                },
+                "\n",
+                "      DB_NAME=",
+                "wordpress",
+                "\n",
+                "      DB_SECRET=",
+                {
+                  "Fn::GetAtt": [
+                    "Db",
+                    "MasterUserSecret.SecretArn"
+                  ]
+                },
+                "\n",
+                "      EFS_ID=",
+                {
+                  "Ref": "Files"
+                },
+                "\n",
+                "      BACKUP_BUCKET=",
+                {
+                  "Ref": "Backups"
+                },
+                "\n",
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "      MOV_ENVIRONMENT_HERE=here\n",
+                        {
+                          "Ref": "WebUserData"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "PropagateTagsToVolumeOnCreation": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ec2-novatrix-v46-web"
+          }
+        ],
+        "IamInstanceProfile": {
+          "Ref": "WebInstanceProfile"
+        }
+      }
+    },
+    "Dbsubnets": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "De tv\u00e5 privata subn\u00e4ten, ett i varje zon.",
+        "SubnetIds": [
+          {
+            "Ref": "Data1Subnet"
+          },
+          {
+            "Ref": "Data2Subnet"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "dbsubnets-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "Db": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "Engine": "mariadb",
+        "DBInstanceClass": "db.t4g.micro",
+        "AllocatedStorage": "20",
+        "StorageType": "gp2",
+        "StorageEncrypted": true,
+        "DBName": "wordpress",
+        "MasterUsername": "wpadmin",
+        "ManageMasterUserPassword": true,
+        "DBSubnetGroupName": {
+          "Ref": "Dbsubnets"
+        },
+        "VPCSecurityGroups": [
+          {
+            "Ref": "DbSecurityGroup"
+          }
+        ],
+        "PubliclyAccessible": false,
+        "MultiAZ": false,
+        "BackupRetentionPeriod": 1,
+        "DeleteAutomatedBackups": true,
+        "DeletionProtection": false,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "db-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "Files": {
+      "Type": "AWS::EFS::FileSystem",
+      "Properties": {
+        "Encrypted": true,
+        "PerformanceMode": "generalPurpose",
+        "ThroughputMode": "bursting"
+      }
+    },
+    "Files1": {
+      "Type": "AWS::EFS::MountTarget",
+      "Properties": {
+        "FileSystemId": {
+          "Ref": "Files"
+        },
+        "SubnetId": {
+          "Ref": "Data1Subnet"
+        },
+        "SecurityGroups": [
+          {
+            "Ref": "FilesSecurityGroup"
+          }
+        ]
+      }
+    },
+    "Files2": {
+      "Type": "AWS::EFS::MountTarget",
+      "Properties": {
+        "FileSystemId": {
+          "Ref": "Files"
+        },
+        "SubnetId": {
+          "Ref": "Data2Subnet"
+        },
+        "SecurityGroups": [
+          {
+            "Ref": "FilesSecurityGroup"
+          }
+        ]
+      }
+    },
+    "Backups": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "db-dumps",
+              "Status": "Enabled",
+              "Prefix": "db/",
+              "ExpirationInDays": 14
+            }
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "backups-novatrix-v46"
+          }
+        ]
+      }
+    },
+    "Webaccess": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "pol-novatrix-v46-web",
+        "Description": "Webbserverns beh\u00f6righeter: l\u00e4sa databasens l\u00f6senord och l\u00e4gga dumpar under db/ i backup-bucketen.",
+        "Roles": [
+          {
+            "Ref": "WebRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "ReadDbSecret",
+              "Effect": "Allow",
+              "Action": "secretsmanager:GetSecretValue",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "Db",
+                  "MasterUserSecret.SecretArn"
+                ]
+              }
+            },
+            {
+              "Sid": "WriteDumps",
+              "Effect": "Allow",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${Backups.Arn}/db/*"
+              }
+            },
+            {
+              "Sid": "ListDumps",
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "Backups",
+                  "Arn"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "VpcId": {
+      "Value": {
+        "Ref": "Vpc"
+      }
+    },
+    "WebRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WebRole",
+          "Arn"
+        ]
+      }
+    },
+    "WebRoleName": {
+      "Value": {
+        "Ref": "WebRole"
+      }
+    },
+    "WebInstanceId": {
+      "Value": {
+        "Ref": "WebInstance"
+      }
+    },
+    "WebPrivateIp": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WebInstance",
+          "PrivateIp"
+        ]
+      }
+    },
+    "WebPublicIp": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WebInstance",
+          "PublicIp"
+        ]
+      }
+    }
+  }
+}
