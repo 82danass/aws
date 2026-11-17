@@ -100,7 +100,7 @@
               "Id": "db-dumps",
               "Status": "Enabled",
               "Prefix": "db/",
-              "ExpirationInDays": 14
+              "ExpirationInDays": 30
             }
           ]
         }
