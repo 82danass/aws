@@ -1,0 +1,664 @@
+{
+  "env": "v47",
+  "description": "WordPress för Novatrix skalbar och tillgänglig: en Application Load Balancer i två zoner tar emot trafiken och skickar den till en Auto Scaling-grupp av servrar, två till fyra, som startas från ett launch template och delar databasen i RDS, filerna på EFS och backupen i S3 från v46. Profilen äger hela stacken, eftersom servrarna inte längre är en enda maskin.",
+  "stages": [
+    "preflight",
+    "cost",
+    "stack"
+  ],
+  "cost": {
+    "amount": 20,
+    "currency": "USD",
+    "timeGrain": "Monthly",
+    "thresholds": [
+      {
+        "percent": 50,
+        "type": "Actual",
+        "operator": "GreaterThan"
+      },
+      {
+        "percent": 80,
+        "type": "Actual",
+        "operator": "GreaterThan"
+      },
+      {
+        "percent": 90,
+        "type": "Actual",
+        "operator": "GreaterThan"
+      },
+      {
+        "percent": 100,
+        "type": "Forecasted",
+        "operator": "GreaterThan"
+      }
+    ],
+    "notify": {
+      "emails": [
+        "82danass@gafe.molndal.se",
+        "assarelius@icloud.com"
+      ]
+    }
+  },
+  "network": {
+    "addressSpace": "10.44.0.0/16",
+    "subnets": [
+      {
+        "purpose": "web",
+        "prefix": "10.44.1.0/24",
+        "zone": "eu-north-1a",
+        "acl": "public"
+      },
+      {
+        "purpose": "web2",
+        "prefix": "10.44.2.0/24",
+        "zone": "eu-north-1b",
+        "acl": "public"
+      },
+      {
+        "purpose": "data1",
+        "prefix": "10.44.11.0/24",
+        "private": true,
+        "zone": "eu-north-1a",
+        "acl": "private"
+      },
+      {
+        "purpose": "data2",
+        "prefix": "10.44.12.0/24",
+        "private": true,
+        "zone": "eu-north-1b",
+        "acl": "private"
+      }
+    ],
+    "securityGroups": {
+      "lb": [
+        {
+          "name": "http",
+          "ports": [
+            "80"
+          ],
+          "source": "*"
+        }
+      ],
+      "web": [
+        {
+          "name": "http",
+          "ports": [
+            "80"
+          ],
+          "source": "lb"
+        }
+      ],
+      "db": [
+        {
+          "name": "mysql",
+          "ports": [
+            "3306"
+          ],
+          "source": "web"
+        }
+      ],
+      "files": [
+        {
+          "name": "nfs",
+          "ports": [
+            "2049"
+          ],
+          "source": "web"
+        }
+      ]
+    },
+    "acls": {
+      "public": [
+        {
+          "name": "web-in",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "80",
+            "443"
+          ],
+          "source": "*",
+          "destination": "*"
+        },
+        {
+          "name": "replies-in",
+          "priority": 200,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "1024-65535"
+          ],
+          "source": "*",
+          "destination": "*"
+        },
+        {
+          "name": "updates-out",
+          "priority": 100,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "80",
+            "443"
+          ],
+          "source": "*",
+          "destination": "*"
+        },
+        {
+          "name": "db-data1-out",
+          "priority": 110,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "3306"
+          ],
+          "source": "*",
+          "destination": "data1"
+        },
+        {
+          "name": "db-data2-out",
+          "priority": 120,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "3306"
+          ],
+          "source": "*",
+          "destination": "data2"
+        },
+        {
+          "name": "nfs-data1-out",
+          "priority": 130,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "2049"
+          ],
+          "source": "*",
+          "destination": "data1"
+        },
+        {
+          "name": "nfs-data2-out",
+          "priority": 140,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "2049"
+          ],
+          "source": "*",
+          "destination": "data2"
+        },
+        {
+          "name": "replies-out",
+          "priority": 200,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "1024-65535"
+          ],
+          "source": "*",
+          "destination": "*"
+        }
+      ],
+      "private": [
+        {
+          "name": "db-from-web",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "3306"
+          ],
+          "source": "web",
+          "destination": "*"
+        },
+        {
+          "name": "db-from-web2",
+          "priority": 105,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "3306"
+          ],
+          "source": "web2",
+          "destination": "*"
+        },
+        {
+          "name": "nfs-from-web",
+          "priority": 110,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "2049"
+          ],
+          "source": "web",
+          "destination": "*"
+        },
+        {
+          "name": "nfs-from-web2",
+          "priority": 115,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "2049"
+          ],
+          "source": "web2",
+          "destination": "*"
+        },
+        {
+          "name": "replies-to-web",
+          "priority": 200,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "1024-65535"
+          ],
+          "source": "*",
+          "destination": "web"
+        },
+        {
+          "name": "replies-to-web2",
+          "priority": 205,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "ports": [
+            "1024-65535"
+          ],
+          "source": "*",
+          "destination": "web2"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "type": "AWS::RDS::DBSubnetGroup",
+      "purpose": "dbsubnets",
+      "properties": {
+        "DBSubnetGroupDescription": "De två privata subnäten, ett i varje zon.",
+        "SubnetIds": [
+          "@output:network.subnet.data1",
+          "@output:network.subnet.data2"
+        ]
+      }
+    },
+    {
+      "type": "AWS::RDS::DBInstance",
+      "purpose": "db",
+      "properties": {
+        "Engine": "mariadb",
+        "DBInstanceClass": "db.t4g.micro",
+        "AllocatedStorage": "20",
+        "StorageType": "gp2",
+        "StorageEncrypted": true,
+        "DBName": "wordpress",
+        "MasterUsername": "wpadmin",
+        "ManageMasterUserPassword": true,
+        "DBSubnetGroupName": "@resourceId:dbsubnets",
+        "VPCSecurityGroups": [
+          "@output:network.securityGroup.db"
+        ],
+        "PubliclyAccessible": false,
+        "MultiAZ": false,
+        "BackupRetentionPeriod": 1,
+        "DeleteAutomatedBackups": true,
+        "DeletionProtection": false
+      }
+    },
+    {
+      "type": "AWS::EFS::FileSystem",
+      "purpose": "files",
+      "properties": {
+        "Encrypted": true,
+        "PerformanceMode": "generalPurpose",
+        "ThroughputMode": "bursting"
+      }
+    },
+    {
+      "type": "AWS::EFS::MountTarget",
+      "purpose": "files1",
+      "properties": {
+        "FileSystemId": "@resourceId:files",
+        "SubnetId": "@output:network.subnet.data1",
+        "SecurityGroups": [
+          "@output:network.securityGroup.files"
+        ]
+      }
+    },
+    {
+      "type": "AWS::EFS::MountTarget",
+      "purpose": "files2",
+      "properties": {
+        "FileSystemId": "@resourceId:files",
+        "SubnetId": "@output:network.subnet.data2",
+        "SecurityGroups": [
+          "@output:network.securityGroup.files"
+        ]
+      }
+    },
+    {
+      "type": "AWS::S3::Bucket",
+      "purpose": "backups",
+      "properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "db-dumps",
+              "Status": "Enabled",
+              "Prefix": "db/",
+              "ExpirationInDays": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "AWS::IAM::Role",
+      "purpose": "webrole",
+      "name": "rol-novatrix-${env}-web",
+      "properties": {
+        "RoleName": "rol-novatrix-${env}-web",
+        "Description": "Webbservrarna: läser databasens lösenord ur Secrets Manager och lägger dumpar i backup-bucketen, inget annat.",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "AWS::IAM::InstanceProfile",
+      "purpose": "webprofile",
+      "name": "ipr-novatrix-${env}-web",
+      "properties": {
+        "InstanceProfileName": "ipr-novatrix-${env}-web",
+        "Roles": [
+          "@resourceId:webrole"
+        ]
+      }
+    },
+    {
+      "type": "AWS::IAM::ManagedPolicy",
+      "purpose": "webaccess",
+      "name": "pol-novatrix-${env}-web",
+      "properties": {
+        "ManagedPolicyName": "pol-novatrix-${env}-web",
+        "Description": "Webbserverns behörigheter: läsa databasens lösenord och lägga dumpar under db/ i backup-bucketen.",
+        "Roles": [
+          "@resourceId:webrole"
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "ReadDbSecret",
+              "Effect": "Allow",
+              "Action": "secretsmanager:GetSecretValue",
+              "Resource": "@attribute:db.MasterUserSecret.SecretArn"
+            },
+            {
+              "Sid": "WriteDumps",
+              "Effect": "Allow",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${Backups.Arn}/db/*"
+              }
+            },
+            {
+              "Sid": "ListDumps",
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": "@attribute:backups.Arn"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "AWS::EC2::LaunchTemplate",
+      "purpose": "weblaunch",
+      "name": "lt-novatrix-${env}-web",
+      "properties": {
+        "LaunchTemplateName": "lt-novatrix-${env}-web",
+        "VersionDescription": "WordPress på Amazon Linux 2023 med databasen i RDS och filerna på EFS",
+        "LaunchTemplateData": {
+          "ImageId": "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}",
+          "InstanceType": "t3.micro",
+          "IamInstanceProfile": {
+            "Arn": "@attribute:webprofile.Arn"
+          },
+          "MetadataOptions": {
+            "HttpTokens": "required"
+          },
+          "NetworkInterfaces": [
+            {
+              "DeviceIndex": 0,
+              "AssociatePublicIpAddress": true,
+              "Groups": [
+                "@output:network.securityGroup.web"
+              ],
+              "DeleteOnTermination": true
+            }
+          ],
+          "BlockDeviceMappings": [
+            {
+              "DeviceName": "/dev/xvda",
+              "Ebs": {
+                "VolumeType": "gp3",
+                "VolumeSize": 8,
+                "Encrypted": true,
+                "DeleteOnTermination": true
+              }
+            }
+          ],
+          "TagSpecifications": [
+            {
+              "ResourceType": "instance",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "ec2-novatrix-${env}-web"
+                },
+                {
+                  "Key": "env",
+                  "Value": "${env}"
+                },
+                {
+                  "Key": "managedBy",
+                  "Value": "mov"
+                }
+              ]
+            },
+            {
+              "ResourceType": "volume",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "ec2-novatrix-${env}-web"
+                },
+                {
+                  "Key": "env",
+                  "Value": "${env}"
+                },
+                {
+                  "Key": "managedBy",
+                  "Value": "mov"
+                }
+              ]
+            }
+          ],
+          "UserData": {
+            "Fn::Base64": {
+              "Fn::Join": [
+                "",
+                [
+                  "#cloud-config\n# Each server the Auto Scaling group starts: the repository cloned from GitHub\n# and v47/wordpress.sh run, as on the single server of v45 and v46.\npackage_update: true\npackage_upgrade: true\npackages:\n  - git\nwrite_files:\n  - path: /etc/mov/deploy.env\n    permissions: '0644'\n    content: |\n      MOV_ENV=${env}\n",
+                  {
+                    "Fn::Sub": "      MOV_REPO=82danass/aws\n      MOV_REF=master\n      MOV_PATH=v47\n      MOV_APP_DIR=/opt/mov/app\n      DB_HOST=${Db.Endpoint.Address}\n      DB_NAME=wordpress\n      DB_SECRET=${Db.MasterUserSecret.SecretArn}\n      EFS_ID=${Files}\n      BACKUP_BUCKET=${Backups}\n      SITE_URL=http://${Alb.DNSName}\n\nruncmd:\n  - [ mkdir, -p, /opt/mov/app ]\n  - [ git, clone, --depth, '1', --branch, master, 'https://github.com/82danass/aws.git', /opt/mov/app ]\n  - [ bash, /opt/mov/app/v47/wordpress.sh ]\n\nfinal_message: \"WordPress bootstrap finished\"\n"
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "purpose": "webtargets",
+      "name": "tg-novatrix-${env}-web",
+      "properties": {
+        "Name": "tg-novatrix-${env}-web",
+        "VpcId": "@output:network.vpc",
+        "TargetType": "instance",
+        "Protocol": "HTTP",
+        "Port": 80,
+        "HealthCheckEnabled": true,
+        "HealthCheckProtocol": "HTTP",
+        "HealthCheckPath": "/wp-login.php",
+        "Matcher": {
+          "HttpCode": "200"
+        },
+        "HealthCheckIntervalSeconds": 15,
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 2,
+        "UnhealthyThresholdCount": 3,
+        "TargetGroupAttributes": [
+          {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "purpose": "alb",
+      "name": "alb-novatrix-${env}",
+      "dependsOn": [
+        "files1",
+        "files2"
+      ],
+      "properties": {
+        "Name": "alb-novatrix-${env}",
+        "Type": "application",
+        "Scheme": "internet-facing",
+        "IpAddressType": "ipv4",
+        "Subnets": [
+          "@output:network.subnet.web",
+          "@output:network.subnet.web2"
+        ],
+        "SecurityGroups": [
+          "@output:network.securityGroup.lb"
+        ]
+      }
+    },
+    {
+      "type": "AWS::ElasticLoadBalancingV2::Listener",
+      "purpose": "http",
+      "properties": {
+        "LoadBalancerArn": "@resourceId:alb",
+        "Port": 80,
+        "Protocol": "HTTP",
+        "DefaultActions": [
+          {
+            "Type": "forward",
+            "TargetGroupArn": "@resourceId:webtargets"
+          }
+        ]
+      }
+    },
+    {
+      "type": "AWS::AutoScaling::AutoScalingGroup",
+      "purpose": "webgroup",
+      "name": "asg-novatrix-${env}-web",
+      "dependsOn": [
+        "webaccess",
+        "http"
+      ],
+      "properties": {
+        "AutoScalingGroupName": "asg-novatrix-${env}-web",
+        "LaunchTemplate": {
+          "LaunchTemplateId": "@resourceId:weblaunch",
+          "Version": "@attribute:weblaunch.LatestVersionNumber"
+        },
+        "MinSize": "2",
+        "MaxSize": "4",
+        "DesiredCapacity": "2",
+        "VPCZoneIdentifier": [
+          "@output:network.subnet.web",
+          "@output:network.subnet.web2"
+        ],
+        "TargetGroupARNs": [
+          "@resourceId:webtargets"
+        ],
+        "HealthCheckType": "ELB",
+        "HealthCheckGracePeriod": 900,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "asg-novatrix-${env}-web",
+            "PropagateAtLaunch": false
+          }
+        ]
+      }
+    },
+    {
+      "type": "AWS::AutoScaling::ScalingPolicy",
+      "purpose": "webscaling",
+      "properties": {
+        "AutoScalingGroupName": "@resourceId:webgroup",
+        "PolicyType": "TargetTrackingScaling",
+        "TargetTrackingConfiguration": {
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ASGAverageCPUUtilization"
+          },
+          "TargetValue": 50
+        }
+      }
+    }
+  ]
+}
