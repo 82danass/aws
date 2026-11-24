@@ -45,12 +45,12 @@ Repo: [github.com/82danass/aws](https://github.com/82danass/aws)
 - [x] Dokumentera hur stacken återskapas
 
 ### [v47 — Skalbarhet och tillgänglighet](v47/README.md)
-- [ ] Skapa avsnitt för v47 och uppdatera README
-- [ ] Skapa ett launch template för WordPress-instansen
-- [ ] Sätt upp en Auto Scaling-grupp över flera Availability Zones
-- [ ] Placera en Application Load Balancer med health checks framför gruppen
-- [ ] Beräkna månadskostnaden med AWS Pricing Calculator
-- [ ] Verifiera och dokumentera
+- [x] Skapa avsnitt för v47 och uppdatera README
+- [x] Skapa ett launch template för WordPress-instansen
+- [x] Sätt upp en Auto Scaling-grupp över flera Availability Zones
+- [x] Placera en Application Load Balancer med health checks framför gruppen
+- [x] Beräkna månadskostnaden med AWS Pricing Calculator
+- [x] Verifiera och dokumentera
 
 ### [v48 — Monitorering och cloud native](v48/README.md)
 - [ ] Skapa avsnitt för v48 och uppdatera README
